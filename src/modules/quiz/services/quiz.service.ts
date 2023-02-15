@@ -25,13 +25,14 @@ export class QuizService {
     return await this.quizRepository
       .createQueryBuilder('q')
       .leftJoinAndSelect('q.questions', 'qn')
+      // .leftJoinAndSelect('qn.options', 'o')
       .getMany();
   }
 
   async getQuizById(id: number) {
     return await this.quizRepository.findOne({
       where: { id },
-      relations: { questions: true },
+      relations: ['questions', 'questions.options'],
     });
   }
 
