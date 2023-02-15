@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateQuizDto } from '../dto/create-quiz.dto';
+// import { Question } from '../entities/question.entity';
 import { Quiz } from '../entities/quiz.entity';
 // import { QuizRepository } from './quiz.respository';
 
@@ -20,8 +21,11 @@ export class QuizService {
    * as a work around the Deprecated @EntityRepository decorator
    */
 
-  getAllQuiz(): (number | string)[] {
-    return [2, 1, 3, 5, 'From The Service...'];
+  async getAllQuiz() {
+    return await this.quizRepository
+      .createQueryBuilder('q')
+      .leftJoinAndSelect('q.questions', 'qn')
+      .getMany();
   }
 
   async getQuizById(id: number) {
